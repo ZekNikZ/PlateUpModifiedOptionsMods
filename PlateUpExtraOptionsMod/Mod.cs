@@ -13,7 +13,7 @@ namespace KitchenExtraOptionsMod
         // mod version must follow semver e.g. "1.2.3"
         public const string MOD_GUID = "io.zkz.plateup.extraoptions";
         public const string MOD_NAME = "Extra Options";
-        public const string MOD_VERSION = "0.3.0";
+        public const string MOD_VERSION = "0.3.2";
         public const string MOD_AUTHOR = "ZekNikZ";
         public const string MOD_GAMEVERSION = ">=1.1.1";
         // Game version this mod is designed for in semver
@@ -32,7 +32,6 @@ namespace KitchenExtraOptionsMod
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
-            Mod.LogInfo("here 1");
             InitModifiedOptions.Init(this);
         }
 

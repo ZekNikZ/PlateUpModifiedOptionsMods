@@ -16,6 +16,7 @@ namespace KitchenPreferModdedOptionsMod
 
             ModifiedOptionsManager.PreferModdedDishes = true;
             ModifiedOptionsManager.PreferModdedCards = true;
+            ModifiedOptionsManager.FixCardSelection = true;
             ModifiedOptionsManager.InitPreferMods(mod);
             Mod.LogInfo("Enabled 'preferred modded dishes' setting");
             Mod.LogInfo("Enabled 'preferred modded cards' setting");

@@ -9,13 +9,10 @@ namespace KitchenExtraOptionsMod
 
         public static void Init(BaseMod mod)
         {
-            Mod.LogInfo("here 2");
-
             if (IsSetup)
             {
                 return;
             }
-            Mod.LogInfo("here 3");
 
             ModifiedOptionsManager.AddExtraDishOptions = true;
             ModifiedOptionsManager.AddExtraLayoutOptions = true;
