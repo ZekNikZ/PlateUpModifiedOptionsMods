@@ -45,25 +45,23 @@ namespace ModifiedOptionsController.Patches
             };
             List<Vector3> extraPositions = new()
             {
-                new Vector3(3f, 0f, -2f),
-                new Vector3(4f, 0f, -2f)
             };
 
-            if (ModifiedOptionsManager.AddExtraDishOptions)
+            if (ModifiedOptionsManager.AddExtraDishOptions || AssetReference.AlwaysAvailableDish != 0)
             {
                 if (ModifiedOptionsManager.IsSeedExplorerInstalled)
                 {
-                    positions.Add(new Vector3(4f, 0f, -4f));
-                    positions.Add(new Vector3(4f, 0f, -5f));
+                    extraPositions.Add(new Vector3(4f, 0f, -5f));
+                    extraPositions.Add(new Vector3(4f, 0f, -4f));
                 }
                 else
                 {
-                    positions.Add(new Vector3(1f, 0f, -7f));
-                    positions.Add(new Vector3(4f, 0f, -5f));
+                    extraPositions.Add(new Vector3(4f, 0f, -5f));
+                    extraPositions.Add(new Vector3(1f, 0f, -7f));
                 }
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
-                if (level >= 2)
+                if (level >= 2 || AssetReference.AlwaysAvailableDish != 0)
                 {
                     extraDishOptions += 1;
                 }
@@ -85,17 +83,36 @@ namespace ModifiedOptionsController.Patches
                     .ToList();
             }
 
-            for (int i = 0; i < Mathf.Min(4, 1 + CreateDishOptionsInitializePatch.DishSizeUpgrades.CalculateEntityCount()) + extraDishOptions; i++)
+            // Main set
+            int i;
+            for (i = 0; i < Mathf.Min(4, 1 + CreateDishOptionsInitializePatch.DishSizeUpgrades.CalculateEntityCount()); i++)
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
                     mInfo.Invoke(__instance, new object[] { positions[i], (i < dishOptions.Count()) ? output : null, false });
                 }
             }
-            if (SpecialEvents.IsChristmas)
+
+            // Extra dish 1 / special event dish
+            if (AssetReference.AlwaysAvailableDish != 0)
             {
-                mInfo.Invoke(__instance, new object[] { extraPositions[0], GameData.Main.Get<Dish>(AssetReference.DishChristmasMeat), false });
-                mInfo.Invoke(__instance, new object[] { extraPositions[1], GameData.Main.Get<Dish>(AssetReference.DishChristmasVeg), false });
+                mInfo.Invoke(__instance, new object[] { extraPositions[0], GameData.Main.Get<Dish>(AssetReference.AlwaysAvailableDish), false });
+            }
+            else if (extraDishOptions >= 1)
+            {
+                if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
+                {
+                    mInfo.Invoke(__instance, new object[] { extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
+                }
+            }
+
+            // Extra dish 2
+            if (extraDishOptions >= 1)
+            {
+                if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
+                {
+                    mInfo.Invoke(__instance, new object[] { extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
+                }
             }
 
             return false;
