@@ -11,7 +11,7 @@ namespace ModifiedOptionsController
         public static bool AddExtraLayoutOptions = false;
 
         public static bool PreferModdedDishes = false;
-        public static bool PreferModdedCards = false;
+        public static float ModdedCardPercentage = 1.0f;
         public static bool FixCardSelection = false;
 
         internal static bool IsSeedExplorerInstalled => ModRegistery.Registered.Any(kv => kv.Value.ModID == "beaudenon.PlateUp.SeedExplorer");

@@ -61,11 +61,11 @@ namespace ModifiedOptionsController.Patches
                 }
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
-                if (level >= 2 || AssetReference.AlwaysAvailableDish != 0)
+                if ((ModifiedOptionsManager.AddExtraDishOptions && level >= 2) || AssetReference.AlwaysAvailableDish != 0)
                 {
                     extraDishOptions += 1;
                 }
-                if (level >= 8)
+                if (ModifiedOptionsManager.AddExtraDishOptions && level >= 8)
                 {
                     extraDishOptions += 1;
                 }
@@ -102,12 +102,12 @@ namespace ModifiedOptionsController.Patches
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
                 {
-                    mInfo.Invoke(__instance, new object[] { extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
+                    mInfo.Invoke(__instance, new object[] { extraPositions[0], (i < dishOptions.Count()) ? output : null, false });
                 }
             }
 
             // Extra dish 2
-            if (extraDishOptions >= 1)
+            if (extraDishOptions >= 2)
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
                 {

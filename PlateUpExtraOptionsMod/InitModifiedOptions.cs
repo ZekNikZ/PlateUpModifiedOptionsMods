@@ -1,4 +1,5 @@
 ﻿using KitchenLib;
+using KitchenLib.Utils;
 using ModifiedOptionsController;
 
 namespace KitchenExtraOptionsMod
@@ -14,11 +15,11 @@ namespace KitchenExtraOptionsMod
                 return;
             }
 
-            ModifiedOptionsManager.AddExtraDishOptions = true;
-            ModifiedOptionsManager.AddExtraLayoutOptions = true;
+            ModifiedOptionsManager.AddExtraDishOptions = PreferenceUtils.Get<BoolPreference>(Mod.MOD_GUID, Mod.PREF_EXTRA_DISH_OPTIONS).Value;
+            ModifiedOptionsManager.AddExtraLayoutOptions = PreferenceUtils.Get<BoolPreference>(Mod.MOD_GUID, Mod.PREF_EXTRA_LAYOUT_OPTIONS).Value;
             ModifiedOptionsManager.InitExtraOptions(mod);
-            Mod.LogInfo("Enabled 'extra dish options' setting");
-            Mod.LogInfo("Enabled 'extra layout options' setting");
+
+            Mod.LogInfo($"Initial settings: AddExtraDishOptions={ModifiedOptionsManager.AddExtraDishOptions}; AddExtraLayoutOptions={ModifiedOptionsManager.AddExtraLayoutOptions}");
 
             IsSetup = true;
         }

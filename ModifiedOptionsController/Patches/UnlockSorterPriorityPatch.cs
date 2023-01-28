@@ -15,15 +15,16 @@ namespace ModifiedOptionsController.Patches
         [HarmonyPrefix]
         static bool Prefix(ref List<Unlock> candidates, HashSet<int> current_cards, UnlockRequest request, UnlockSorterPriority __instance)
         {
-            if (!ModifiedOptionsManager.PreferModdedCards)
+            if (ModifiedOptionsManager.ModdedCardPercentage == 0)
             {
                 return true;
             }
 
             var mIsPriority = ReflectionUtils.GetMethod<UnlockSorterPriority>("IsPriority");
 
-            bool is_priority = UnityEngine.Random.value < __instance.PriorityProbability;
-            candidates = candidates.OrderByDescending((Unlock u) => ((is_priority && (bool)mIsPriority.Invoke(__instance, new object[] { u })) ? 1 : 0) + (Utils.IsModded(u) ? 5 : 0)).ToList();
+            bool isPriority = UnityEngine.Random.value < __instance.PriorityProbability;
+            bool isModdedPriority = UnityEngine.Random.value < ModifiedOptionsManager.ModdedCardPercentage;
+            candidates = candidates.OrderByDescending((Unlock u) => ((isPriority && (bool)mIsPriority.Invoke(__instance, new object[] { u })) ? 1 : 0) + ((isModdedPriority && Utils.IsModded(u)) ? 5 : 0)).ToList();
 
             return false;
         }

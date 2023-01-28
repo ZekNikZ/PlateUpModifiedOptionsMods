@@ -1,4 +1,5 @@
 ﻿using KitchenLib;
+using KitchenLib.Utils;
 using ModifiedOptionsController;
 
 namespace KitchenPreferModdedOptionsMod
@@ -14,12 +15,12 @@ namespace KitchenPreferModdedOptionsMod
                 return;
             }
 
-            ModifiedOptionsManager.PreferModdedDishes = true;
-            ModifiedOptionsManager.PreferModdedCards = true;
-            ModifiedOptionsManager.FixCardSelection = true;
+            ModifiedOptionsManager.PreferModdedDishes = PreferenceUtils.Get<BoolPreference>(Mod.MOD_GUID, Mod.PREF_PREFER_MODDED_DISHES).Value;
+            ModifiedOptionsManager.FixCardSelection = PreferenceUtils.Get<BoolPreference>(Mod.MOD_GUID, Mod.PREF_FIX_CARD_SELECTION).Value;
+            ModifiedOptionsManager.ModdedCardPercentage = PreferenceUtils.Get<FloatPreference>(Mod.MOD_GUID, Mod.PREF_CARD_PERCENTAGE).Value;
             ModifiedOptionsManager.InitPreferMods(mod);
-            Mod.LogInfo("Enabled 'preferred modded dishes' setting");
-            Mod.LogInfo("Enabled 'preferred modded cards' setting");
+
+            Mod.LogInfo($"Initial settings: PreferModdedDishes={ModifiedOptionsManager.PreferModdedDishes}; ModdedCardPercentage={ModifiedOptionsManager.ModdedCardPercentage}; FixCardSelection={ModifiedOptionsManager.FixCardSelection}");
 
             IsSetup = true;
         }
