@@ -26,7 +26,7 @@ namespace ModifiedOptionsController.Patches
         [HarmonyPrefix]
         static bool Prefix(CreateLayoutSlots __instance)
         {
-            if (!ModifiedOptionsManager.AddExtraLayoutOptions || ModifiedOptionsManager.IsSeedExplorerInstalled)
+            if (!ModifiedOptionsManager.AddExtraLayoutOptions)
             {
                 return true;
             }

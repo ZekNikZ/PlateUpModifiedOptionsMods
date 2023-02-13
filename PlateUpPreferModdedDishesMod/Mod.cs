@@ -17,15 +17,15 @@ namespace KitchenPreferModdedOptionsMod
         // mod version must follow semver e.g. "1.2.3"
         public const string MOD_GUID = "io.zkz.plateup.prefermoddedoptions";
         public const string MOD_NAME = "Prefer Modded Options";
-        public const string MOD_VERSION = "0.2.0";
+        public const string MOD_VERSION = "0.3.0";
         public const string MOD_AUTHOR = "ZekNikZ";
-        public const string MOD_GAMEVERSION = ">=1.1.1";
+        public const string MOD_GAMEVERSION = ">=1.1.4";
         // Game version this mod is designed for in semver
         // e.g. ">=1.1.1" current and all future
         // e.g. ">=1.1.1 <=1.2.3" for all from/until
 
         public const string PREF_CARD_PERCENTAGE = "ModdedCardPercentage";
-        public const string PREF_PREFER_MODDED_DISHES = "PreferModdedDishes";
+        public const string PREF_DISH_PERCENTAGE = "ModdedDishPercentage";
         public const string PREF_FIX_CARD_SELECTION = "FixCardSelection";
 
         public Mod() : base(MOD_GUID, MOD_NAME, MOD_AUTHOR, MOD_VERSION, MOD_GAMEVERSION, Assembly.GetExecutingAssembly()) { }
@@ -42,7 +42,7 @@ namespace KitchenPreferModdedOptionsMod
         {
             SetupPreferences();
 
-            var dishPref = AddPreference<KitchenLib.BoolPreference>(MOD_GUID, PREF_PREFER_MODDED_DISHES, "Prefer Modded Dishes");
+            var dishPref = AddPreference<KitchenLib.BoolPreference>(MOD_GUID, PREF_DISH_PERCENTAGE, "Prefer Modded Dishes");
             dishPref.Value = true;
             var fixCardsPref = AddPreference<KitchenLib.BoolPreference>(MOD_GUID, PREF_FIX_CARD_SELECTION, "Fix Card Selection");
             fixCardsPref.Value = true;
@@ -70,11 +70,11 @@ namespace KitchenPreferModdedOptionsMod
 
             Events.PreferencesSaveEvent += (s, args) =>
             {
-                ModifiedOptionsManager.PreferModdedDishes = PreferenceUtils.Get<KitchenLib.BoolPreference>(MOD_GUID, PREF_PREFER_MODDED_DISHES).Value;
+                ModifiedOptionsManager.ModdedDishPercentage = PreferenceUtils.Get<KitchenLib.FloatPreference>(MOD_GUID, PREF_DISH_PERCENTAGE).Value;
                 ModifiedOptionsManager.FixCardSelection = PreferenceUtils.Get<KitchenLib.BoolPreference>(MOD_GUID, PREF_FIX_CARD_SELECTION).Value;
                 ModifiedOptionsManager.ModdedCardPercentage = PreferenceUtils.Get<KitchenLib.FloatPreference>(MOD_GUID, PREF_CARD_PERCENTAGE).Value;
 
-                LogInfo($"New settings: PreferModdedDishes={ModifiedOptionsManager.PreferModdedDishes}; ModdedCardPercentage={ModifiedOptionsManager.ModdedCardPercentage}; FixCardSelection={ModifiedOptionsManager.FixCardSelection}");
+                LogInfo($"New settings: ModdedDishPercentage={ModifiedOptionsManager.ModdedDishPercentage}; ModdedCardPercentage={ModifiedOptionsManager.ModdedCardPercentage}; FixCardSelection={ModifiedOptionsManager.FixCardSelection}");
             };
         }
 

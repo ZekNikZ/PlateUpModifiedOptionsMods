@@ -57,8 +57,6 @@ namespace KitchenExtraOptionsMod
             };
             AddInfo("Adds two extra layout options to the hub.");
 
-            AddInfo("Note: the 'Extra Layout Options' is ignored with Seed Explorer is installed.");
-
             AddButton("Apply", delegate
             {
                 PreferenceUtils.Save();

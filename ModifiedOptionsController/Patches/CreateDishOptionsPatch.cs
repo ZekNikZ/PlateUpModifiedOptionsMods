@@ -41,7 +41,9 @@ namespace ModifiedOptionsController.Patches
                 new Vector3(2f, 0f, -7f),
                 new Vector3(3f, 0f, -7f),
                 new Vector3(4f, 0f, -7f),
-                new Vector3(4f, 0f, -6f)
+                new Vector3(4f, 0f, -6f),
+                new Vector3(4f, 0f, -5f),
+                new Vector3(1f, 0f, -7f)
             };
             List<Vector3> extraPositions = new()
             {
@@ -49,23 +51,15 @@ namespace ModifiedOptionsController.Patches
 
             if (ModifiedOptionsManager.AddExtraDishOptions || AssetReference.AlwaysAvailableDish != 0)
             {
-                if (ModifiedOptionsManager.IsSeedExplorerInstalled)
-                {
-                    extraPositions.Add(new Vector3(4f, 0f, -5f));
-                    extraPositions.Add(new Vector3(4f, 0f, -4f));
-                }
-                else
-                {
-                    extraPositions.Add(new Vector3(4f, 0f, -5f));
-                    extraPositions.Add(new Vector3(1f, 0f, -7f));
-                }
+                extraPositions.Add(new Vector3(4f, 0f, -4f));
+                extraPositions.Add(new Vector3(4f, 0f, -3f));
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
-                if ((ModifiedOptionsManager.AddExtraDishOptions && level >= 2) || AssetReference.AlwaysAvailableDish != 0)
+                if ((ModifiedOptionsManager.AddExtraDishOptions && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
                 {
                     extraDishOptions += 1;
                 }
-                if (ModifiedOptionsManager.AddExtraDishOptions && level >= 8)
+                if (ModifiedOptionsManager.AddExtraDishOptions && level >= 15)
                 {
                     extraDishOptions += 1;
                 }
@@ -73,19 +67,34 @@ namespace ModifiedOptionsController.Patches
 
             NativeArray<CDishUpgrade> nativeArray = CreateDishOptionsInitializePatch.DishUpgrades.ToComponentDataArray<CDishUpgrade>(Allocator.Temp);
             List<CDishUpgrade> dishOptions = Kitchen.RandomExtensions.Shuffle(nativeArray.ToList());
+            dishOptions = dishOptions
+                .GroupBy(cdu => cdu.DishID)
+                .Select(g => g.First())
+                .ToList();
 
-            if (ModifiedOptionsManager.PreferModdedDishes)
+            int baseDishCount = Mathf.Min(positions.Count, 1 + CreateDishOptionsInitializePatch.DishSizeUpgrades.CalculateEntityCount());
+            int totalDishCount = baseDishCount + extraDishOptions - (AssetReference.AlwaysAvailableDish != 0 ? 1 : 0);
+
+            if (ModifiedOptionsManager.ModdedDishPercentage > 0)
             {
-                dishOptions = dishOptions
-                    .GroupBy(cdu => cdu.DishID)
-                    .Select(g => g.First())
-                    .OrderBy(cdu => Utils.IsModded(cdu.DishID) ? 0 : 1)
+                var numModdedDishes = Mathf.FloorToInt(totalDishCount * ModifiedOptionsManager.ModdedDishPercentage);
+                var numVanillaDishes = totalDishCount - numModdedDishes;
+
+                var moddedDishes = dishOptions
+                    .Where(cdu => Utils.IsModded(cdu.DishID))
+                    .Take(numModdedDishes)
                     .ToList();
+                var vanillaDishes = dishOptions
+                    .Where(cdu => !Utils.IsModded(cdu.DishID))
+                    .Take(numVanillaDishes + (numModdedDishes - moddedDishes.Count))
+                    .ToList();
+
+                dishOptions = Kitchen.RandomExtensions.Shuffle(moddedDishes.Concat(vanillaDishes).ToList());
             }
 
             // Main set
             int i;
-            for (i = 0; i < Mathf.Min(4, 1 + CreateDishOptionsInitializePatch.DishSizeUpgrades.CalculateEntityCount()); i++)
+            for (i = 0; i < baseDishCount; i++)
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
@@ -100,19 +109,21 @@ namespace ModifiedOptionsController.Patches
             }
             else if (extraDishOptions >= 1)
             {
-                if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
+                if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
                     mInfo.Invoke(__instance, new object[] { extraPositions[0], (i < dishOptions.Count()) ? output : null, false });
                 }
+                ++i;
             }
 
             // Extra dish 2
             if (extraDishOptions >= 2)
             {
-                if (GameData.Main.TryGet<Dish>(dishOptions[i++].DishID, out var output, warn_if_fail: true))
+                if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
                     mInfo.Invoke(__instance, new object[] { extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
                 }
+                ++i;
             }
 
             return false;

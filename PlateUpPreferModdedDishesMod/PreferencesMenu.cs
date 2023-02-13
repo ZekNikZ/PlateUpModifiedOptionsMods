@@ -9,7 +9,7 @@ namespace KitchenPreferModdedOptionsMod
 {
     public class PreferencesMenu<T> : KLMenu<T>
     {
-        private Option<bool> PreferModdedDishes;
+        private Option<float> ModdedDishPercentage;
         private Option<float> ModdedCardPercentage;
         private Option<bool> FixCardSelection;
 
@@ -19,15 +19,15 @@ namespace KitchenPreferModdedOptionsMod
 
         public override void Setup(int player_id)
         {
-            PreferModdedDishes = new Option<bool>(
-                new List<bool>
+            ModdedDishPercentage = new Option<float>(
+                new List<float>
                 {
-                    false, true
+                     0, 0.25f, 0.5f, 0.75f, 1
                 },
-                PreferenceUtils.Get<KitchenLib.BoolPreference>(Mod.MOD_GUID, Mod.PREF_PREFER_MODDED_DISHES).Value,
+                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_DISH_PERCENTAGE).Value,
                 new List<string>
                 {
-                    "Off", "On"
+                    "0%", "25%", "50%", "75%", "100%"
                 }
             );
 
@@ -40,7 +40,8 @@ namespace KitchenPreferModdedOptionsMod
                 new List<string>
                 {
                     "0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"
-                });
+                }
+            );
 
             FixCardSelection = new Option<bool>(
                 new List<bool>
@@ -54,10 +55,10 @@ namespace KitchenPreferModdedOptionsMod
                 }
             );
 
-            AddLabel("Prefer Modded Dishes");
-            Add(PreferModdedDishes).OnChanged += delegate (object _, bool newVal)
+            AddLabel("Modded Dish Override");
+            Add(ModdedDishPercentage).OnChanged += delegate (object _, float newVal)
             {
-                PreferenceUtils.Get<KitchenLib.BoolPreference>(Mod.MOD_GUID, Mod.PREF_PREFER_MODDED_DISHES).Value = newVal;
+                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_DISH_PERCENTAGE).Value = newVal;
             };
             AddInfo("Forces modded dishes to appear in the hub before vanilla ones.");
 

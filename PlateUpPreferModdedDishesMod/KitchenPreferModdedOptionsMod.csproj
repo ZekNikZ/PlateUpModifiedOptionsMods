@@ -15,15 +15,11 @@
 	</PropertyGroup>
   
 	<ItemGroup>
-		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.5.6" />
+		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.6.16" />
 		<ProjectReference Include="..\ModifiedOptionsController\ModifiedOptionsController.csproj" />
 	
 		<Reference Include="KitchenLib">
-			<HintPath>$(PlateUpGameFolder)\Mods\KitchenLib\KitchenLib-Workshop.dll</HintPath>
-		</Reference>
-
-		<Reference Include="0Harmony">
-			<HintPath>$(PlateUpGameFolder)\Mods\KitchenUnityExplorer\0Harmony.dll</HintPath>
+			<HintPath>$(PlateUpGameFolder)\Mods\KitchenLib\content\KitchenLib-Workshop.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
