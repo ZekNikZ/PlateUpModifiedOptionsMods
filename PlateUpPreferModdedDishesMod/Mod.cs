@@ -17,7 +17,7 @@ namespace KitchenPreferModdedOptionsMod
         // mod version must follow semver e.g. "1.2.3"
         public const string MOD_GUID = "io.zkz.plateup.prefermoddedoptions";
         public const string MOD_NAME = "Prefer Modded Options";
-        public const string MOD_VERSION = "0.3.0";
+        public const string MOD_VERSION = "0.3.1";
         public const string MOD_AUTHOR = "ZekNikZ";
         public const string MOD_GAMEVERSION = ">=1.1.4";
         // Game version this mod is designed for in semver
@@ -42,8 +42,8 @@ namespace KitchenPreferModdedOptionsMod
         {
             SetupPreferences();
 
-            var dishPref = AddPreference<KitchenLib.BoolPreference>(MOD_GUID, PREF_DISH_PERCENTAGE, "Prefer Modded Dishes");
-            dishPref.Value = true;
+            var dishPref = AddPreference<KitchenLib.FloatPreference>(MOD_GUID, PREF_DISH_PERCENTAGE, "Modded Dish Override");
+            dishPref.Value = 0.5f;
             var fixCardsPref = AddPreference<KitchenLib.BoolPreference>(MOD_GUID, PREF_FIX_CARD_SELECTION, "Fix Card Selection");
             fixCardsPref.Value = true;
             var cardPercentage = AddPreference<KitchenLib.FloatPreference>(MOD_GUID, PREF_CARD_PERCENTAGE, "Modded Card Overrides");
