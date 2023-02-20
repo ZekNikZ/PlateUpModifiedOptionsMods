@@ -1,7 +1,6 @@
 ﻿using Kitchen;
 using Kitchen.Modules;
 using KitchenLib;
-using KitchenLib.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,76 +8,66 @@ namespace KitchenPreferModdedOptionsMod
 {
     public class PreferencesMenu<T> : KLMenu<T>
     {
-        private Option<float> ModdedDishPercentage;
-        private Option<float> ModdedCardPercentage;
-        private Option<bool> FixCardSelection;
-
         public PreferencesMenu(Transform container, ModuleList moduleList) : base(container, moduleList)
         {
         }
 
         public override void Setup(int player_id)
         {
-            ModdedDishPercentage = new Option<float>(
+            AddLabel("Modded Dish Override");
+            Add(new Option<float>(
                 new List<float>
                 {
                      0, 0.25f, 0.5f, 0.75f, 1
                 },
-                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_DISH_PERCENTAGE).Value,
+                Mod.DishPercentagePreference.Get(),
                 new List<string>
                 {
                     "0%", "25%", "50%", "75%", "100%"
                 }
-            );
-
-            ModdedCardPercentage = new Option<float>(
-                new List<float>
-                {
-                     0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1
-                },
-                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_CARD_PERCENTAGE).Value,
-                new List<string>
-                {
-                    "0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"
-                }
-            );
-
-            FixCardSelection = new Option<bool>(
-                new List<bool>
-                {
-                    false, true
-                },
-                PreferenceUtils.Get<KitchenLib.BoolPreference>(Mod.MOD_GUID, Mod.PREF_FIX_CARD_SELECTION).Value,
-                new List<string>
-                {
-                    "Off", "On"
-                }
-            );
-
-            AddLabel("Modded Dish Override");
-            Add(ModdedDishPercentage).OnChanged += delegate (object _, float newVal)
+            )).OnChanged += delegate (object _, float newVal)
             {
-                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_DISH_PERCENTAGE).Value = newVal;
+                Mod.DishPercentagePreference.Set(newVal);
             };
             AddInfo("Forces modded dishes to appear in the hub before vanilla ones.");
 
             AddLabel("Modded Card Override");
-            Add(ModdedCardPercentage).OnChanged += delegate (object _, float newVal)
+            Add(new Option<float>(
+                new List<float>
+                {
+                     0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1
+                },
+                Mod.CardPercentagePreference.Get(),
+                new List<string>
+                {
+                    "0%", "10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"
+                }
+            )).OnChanged += delegate (object _, float newVal)
             {
-                PreferenceUtils.Get<KitchenLib.FloatPreference>(Mod.MOD_GUID, Mod.PREF_CARD_PERCENTAGE).Value = newVal;
+                Mod.CardPercentagePreference.Set(newVal);
             };
             AddInfo("Determines the chance of card choices being forced to be modded cards.");
 
             AddLabel("Fix Card Selection");
-            Add(FixCardSelection).OnChanged += delegate (object _, bool newVal)
+            Add(new Option<bool>(
+                new List<bool>
+                {
+                    false, true
+                },
+                Mod.FixCardSelectionPreference.Get(),
+                new List<string>
+                {
+                    "Off", "On"
+                }
+            )).OnChanged += delegate (object _, bool newVal)
             {
-                PreferenceUtils.Get<KitchenLib.BoolPreference>(Mod.MOD_GUID, Mod.PREF_FIX_CARD_SELECTION).Value = newVal;
+                Mod.FixCardSelectionPreference.Set(newVal);
             };
             AddInfo("(Recommended) Fixes a bug with the vanilla card selection algorithm.");
 
             AddButton("Apply", delegate
             {
-                PreferenceUtils.Save();
+                Mod.PreferenceManager.Save();
                 RequestPreviousMenu();
             });
 

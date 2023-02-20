@@ -5,12 +5,22 @@ namespace ModifiedOptionsController
 {
     public class ModifiedOptionsManager
     {
-        public static bool AddExtraDishOptions = false;
-        public static bool AddExtraLayoutOptions = false;
+        public delegate T ValueProvider<T>();
 
-        public static float ModdedDishPercentage = 0.0f;
-        public static float ModdedCardPercentage = 0.0f;
-        public static bool FixCardSelection = false;
+        public static ValueProvider<bool> AddExtraDishOptionsGetter = () => false;
+        public static bool AddExtraDishOptions => AddExtraDishOptionsGetter.Invoke();
+
+        public static ValueProvider<bool> AddExtraLayoutOptionsGetter = () => false;
+        public static bool AddExtraLayoutOptions => AddExtraLayoutOptionsGetter.Invoke();
+
+        public static ValueProvider<float> ModdedDishPercentageGetter = () => 0.0f;
+        public static float ModdedDishPercentage => ModdedDishPercentageGetter.Invoke();
+
+        public static ValueProvider<float> ModdedCardPercentageGetter = () => 0.0f;
+        public static float ModdedCardPercentage => ModdedCardPercentageGetter.Invoke();
+
+        public static ValueProvider<bool> FixCardSelectionGetter = () => false;
+        public static bool FixCardSelection => FixCardSelectionGetter.Invoke();
 
         public static void InitExtraOptions(BaseMod mod)
         {
