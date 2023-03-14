@@ -14,6 +14,14 @@ namespace KitchenPreferModdedOptionsMod
 
         public override void Setup(int player_id)
         {
+            AddLabel("Settings Profile");
+            AddProfileSelector(Mod.MOD_GUID, newProfile =>
+            {
+                Mod.PreferenceManager.Save();
+                Mod.PreferenceManager.SetProfile(newProfile);
+                Mod.PreferenceManager.Load();
+            }, Mod.PreferenceManager);
+
             AddLabel("Modded Dish Override");
             Add(new Option<float>(
                 new List<float>

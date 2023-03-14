@@ -33,18 +33,19 @@ namespace ModifiedOptionsController.Patches
 
             MethodInfo mInfo = typeof(CreateLayoutSlots).GetMethod("CreateMapSource", BindingFlags.NonPublic | BindingFlags.Instance);
 
+            Vector3 office = LobbyPositionAnchors.Office;
             List<Vector3> positions = new()
             {
-                new Vector3(-2f, 0f, -7f),
-                new Vector3(-3f, 0f, -7f),
-                new Vector3(-4f, 0f, -7f),
-                new Vector3(-4f, 0f, -6f),
-                new Vector3(-1f, 0f, -7f),
-                new Vector3(0f, 0f, -7f)
+                new Vector3(-2f, 0f, -5f),
+                new Vector3(-3f, 0f, -5f),
+                new Vector3(-4f, 0f, -5f),
+                new Vector3(-4f, 0f, -4f),
+                new Vector3(-1f, 0f, -5f),
+                new Vector3(-4f, 0f, -2f)
             };
             for (int i = 0; i < Mathf.Min(4, 2 + CreateLayoutSlotsInitializePatch.LayoutSizeUpgrades.CalculateEntityCount()) + 2; i++)
             {
-                mInfo.Invoke(__instance, new object[] { positions[i] });
+                mInfo.Invoke(__instance, new object[] { office + positions[i] });
             }
 
             return false;

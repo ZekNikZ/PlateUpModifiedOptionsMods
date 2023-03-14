@@ -36,14 +36,15 @@ namespace ModifiedOptionsController.Patches
 
             int extraDishOptions = 0;
 
+            Vector3 office = LobbyPositionAnchors.Office;
             List<Vector3> positions = new()
             {
-                new Vector3(2f, 0f, -7f),
-                new Vector3(3f, 0f, -7f),
-                new Vector3(4f, 0f, -7f),
-                new Vector3(4f, 0f, -6f),
+                new Vector3(2f, 0f, -5f),
+                new Vector3(3f, 0f, -5f),
                 new Vector3(4f, 0f, -5f),
-                new Vector3(1f, 0f, -7f)
+                new Vector3(4f, 0f, -4f),
+                new Vector3(4f, 0f, -3f),
+                new Vector3(1f, 0f, -5f)
             };
             List<Vector3> extraPositions = new()
             {
@@ -51,8 +52,8 @@ namespace ModifiedOptionsController.Patches
 
             if (ModifiedOptionsManager.AddExtraDishOptions || AssetReference.AlwaysAvailableDish != 0)
             {
-                extraPositions.Add(new Vector3(4f, 0f, -4f));
-                extraPositions.Add(new Vector3(4f, 0f, -3f));
+                extraPositions.Add(new Vector3(0f, 0f, -5f));
+                extraPositions.Add(new Vector3(4f, 0f, -1f));
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
                 if ((ModifiedOptionsManager.AddExtraDishOptions && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
@@ -98,7 +99,7 @@ namespace ModifiedOptionsController.Patches
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
-                    mInfo.Invoke(__instance, new object[] { positions[i], (i < dishOptions.Count()) ? output : null, false });
+                    mInfo.Invoke(__instance, new object[] { office + positions[i], (i < dishOptions.Count()) ? output : null, false });
                 }
             }
 
@@ -111,7 +112,7 @@ namespace ModifiedOptionsController.Patches
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
-                    mInfo.Invoke(__instance, new object[] { extraPositions[0], (i < dishOptions.Count()) ? output : null, false });
+                    mInfo.Invoke(__instance, new object[] { office + extraPositions[0], (i < dishOptions.Count()) ? output : null, false });
                 }
                 ++i;
             }
@@ -121,7 +122,7 @@ namespace ModifiedOptionsController.Patches
             {
                 if (GameData.Main.TryGet<Dish>(dishOptions[i].DishID, out var output, warn_if_fail: true))
                 {
-                    mInfo.Invoke(__instance, new object[] { extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
+                    mInfo.Invoke(__instance, new object[] { office + extraPositions[1], (i < dishOptions.Count()) ? output : null, false });
                 }
                 ++i;
             }
