@@ -16,13 +16,9 @@
   
 	<ItemGroup>
 		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.10.21" />
-		<ProjectReference Include="..\ModifiedOptionsController\ModifiedOptionsController.csproj" />
 	</ItemGroup>
 
 	<Target Name="BundleWorkshop" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
 		<Copy SourceFiles="$(TargetDir)$(MSBuildProjectName)-$(Configuration).dll" DestinationFolder="$(WorkshopDir)" />
-		<Copy SourceFiles="$(TargetDir)ModifiedOptionsController-Workshop.dll" DestinationFiles="$(WorkshopDir)\ModifiedOptionsController-Workshop.dll" />
-
-		<Copy SourceFiles="$(TargetDir)ModifiedOptionsController-Workshop.dll" DestinationFiles="$(GameModsPath)\$(MSBuildProjectName)\content\ModifiedOptionsController-Workshop.dll" />
 	</Target>
 </Project>

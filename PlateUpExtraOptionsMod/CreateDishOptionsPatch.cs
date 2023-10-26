@@ -8,7 +8,7 @@ using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace ModifiedOptionsController.Patches
+namespace KitchenExtraOptionsMod.Patches
 {
     [HarmonyPatch(typeof(CreateDishOptions), "Initialise")]
     class CreateDishOptionsInitializePatch
@@ -50,17 +50,17 @@ namespace ModifiedOptionsController.Patches
             {
             };
 
-            if (ModifiedOptionsManager.ExtraDishOptionsCount > 0 || AssetReference.AlwaysAvailableDish != 0)
+            if (Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_DISH_OPTIONS) > 0 || AssetReference.AlwaysAvailableDish != 0)
             {
                 extraPositions.Add(new Vector3(0f, 0f, -5f));
                 extraPositions.Add(new Vector3(4f, 0f, -1f));
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
-                if ((ModifiedOptionsManager.ExtraDishOptionsCount >= 1 && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
+                if ((Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_DISH_OPTIONS) >= 1 && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
                 {
                     extraDishOptions += 1;
                 }
-                if (ModifiedOptionsManager.ExtraDishOptionsCount >= 2 && level >= 15)
+                if (Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_DISH_OPTIONS) >= 2 && level >= 15)
                 {
                     extraDishOptions += 1;
                 }
@@ -76,9 +76,9 @@ namespace ModifiedOptionsController.Patches
             int baseDishCount = Mathf.Min(positions.Count, 1 + CreateDishOptionsInitializePatch.DishSizeUpgrades.CalculateEntityCount());
             int totalDishCount = baseDishCount + extraDishOptions - (AssetReference.AlwaysAvailableDish != 0 ? 1 : 0);
 
-            if (ModifiedOptionsManager.ModdedDishPercentage > 0)
+            if (Mod.PreferenceManager.Get<float>(Mod.PREF_MODDED_DISH_PERCENTAGE) > 0)
             {
-                var numModdedDishes = Mathf.FloorToInt(totalDishCount * ModifiedOptionsManager.ModdedDishPercentage);
+                var numModdedDishes = Mathf.FloorToInt(totalDishCount * Mod.PreferenceManager.Get<float>(Mod.PREF_MODDED_DISH_PERCENTAGE));
                 var numVanillaDishes = totalDishCount - numModdedDishes;
 
                 var moddedDishes = dishOptions

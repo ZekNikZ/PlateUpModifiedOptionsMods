@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using KitchenMods;
-using ModifiedOptionsController;
 using PreferenceSystem;
 using System.Collections.Generic;
 using System.Reflection;
@@ -17,6 +16,7 @@ namespace KitchenExtraOptionsMod
 
         public const string PREF_EXTRA_DISH_OPTIONS = "extraDishOptionsCount";
         public const string PREF_EXTRA_LAYOUT_OPTIONS = "extraLayoutOptionsCount";
+        public const string PREF_MODDED_DISH_PERCENTAGE = "moddedDishPercentage";
 
         public static PreferenceSystemManager PreferenceManager;
 
@@ -42,8 +42,6 @@ namespace KitchenExtraOptionsMod
             LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
 
             SetupPreferences();
-
-            InitModifiedOptions.Init();
         }
 
         public void PreInject() { }
@@ -57,7 +55,8 @@ namespace KitchenExtraOptionsMod
             // Register preferences
             PreferenceManager
                 .AddOption(PREF_EXTRA_DISH_OPTIONS, 2, new int[] { 0, 1, 2 }, new string[] { "0", "1", "2" }, "Extra Dish Options", "The amount of extra dish options to add to the HQ. Default: 2")
-                .AddOption(PREF_EXTRA_LAYOUT_OPTIONS, 2, new int[] { 0, 1, 2 }, new string[] { "0", "1", "2" }, "Extra Layout Options", "The amount of extra layout options to add to the HQ. Default: 2");
+                .AddOption(PREF_EXTRA_LAYOUT_OPTIONS, 2, new int[] { 0, 1, 2 }, new string[] { "0", "1", "2" }, "Extra Layout Options", "The amount of extra layout options to add to the HQ. Default: 2")
+                .AddOption(PREF_MODDED_DISH_PERCENTAGE, 0f, new float[] { 0, 0.25f, 0.5f, 0.75f, 1 }, new string[] { "Disabled", "25%", "50%", "75%", "100%" }, "Modded Dish Percentage", "The ratio of modded dishes to vanilla ones in the HQ. Default: Disabled");
 
             // Register menus
             PreferenceManager.RegisterMenu(PreferenceSystemManager.MenuType.MainMenu);

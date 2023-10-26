@@ -2,7 +2,7 @@
 using KitchenData;
 using System.Collections.Generic;
 
-namespace ModifiedOptionsController.Patches
+namespace KitchenPreferModdedOptionsMod.Patches
 {
     /// <summary>
     /// Fixes a bug in the vanilla game where the first unlock card in the 'canditates' list is never selected.
@@ -13,7 +13,7 @@ namespace ModifiedOptionsController.Patches
         [HarmonyPostfix]
         static void Postfix(List<Unlock> candidates, HashSet<int> current_cards, UnlockRequest request, UnlockSelectorGroupChoice __instance, ref UnlockOptions __result)
         {
-            if (!ModifiedOptionsManager.FixCardSelection)
+            if (!Mod.PreferenceManager.Get<bool>(Mod.PREF_FIX_ALGORITHM))
             {
                 return;
             }

@@ -5,7 +5,7 @@ using Kitchen;
 using Unity.Entities;
 using UnityEngine;
 
-namespace ModifiedOptionsController.Patches
+namespace KitchenExtraOptionsMod.Patches
 {
     [HarmonyPatch(typeof(CreateLayoutSlots), "Initialise")]
     class CreateLayoutSlotsInitializePatch
@@ -26,7 +26,7 @@ namespace ModifiedOptionsController.Patches
         [HarmonyPrefix]
         static bool Prefix(CreateLayoutSlots __instance)
         {
-            if (ModifiedOptionsManager.ExtraLayoutOptionsCount == 0)
+            if (Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_LAYOUT_OPTIONS) == 0)
             {
                 return true;
             }
@@ -43,7 +43,7 @@ namespace ModifiedOptionsController.Patches
                 new Vector3(-1f, 0f, -5f),
                 new Vector3(-4f, 0f, -2f)
             };
-            for (int i = 0; i < ModifiedOptionsManager.ExtraLayoutOptionsCount + Mathf.Min(4, 2 + CreateLayoutSlotsInitializePatch.LayoutSizeUpgrades.CalculateEntityCount()); i++)
+            for (int i = 0; i < Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_LAYOUT_OPTIONS) + Mathf.Min(4, 2 + CreateLayoutSlotsInitializePatch.LayoutSizeUpgrades.CalculateEntityCount()); i++)
             {
                 mInfo.Invoke(__instance, new object[] { office + positions[i] });
             }
