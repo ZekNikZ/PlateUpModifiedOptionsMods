@@ -50,17 +50,17 @@ namespace ModifiedOptionsController.Patches
             {
             };
 
-            if (ModifiedOptionsManager.AddExtraDishOptions || AssetReference.AlwaysAvailableDish != 0)
+            if (ModifiedOptionsManager.ExtraDishOptionsCount > 0 || AssetReference.AlwaysAvailableDish != 0)
             {
                 extraPositions.Add(new Vector3(0f, 0f, -5f));
                 extraPositions.Add(new Vector3(4f, 0f, -1f));
 
                 var level = __instance.GetSingleton<SPlayerLevel>().Level;
-                if ((ModifiedOptionsManager.AddExtraDishOptions && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
+                if ((ModifiedOptionsManager.ExtraDishOptionsCount >= 1 && level >= 13) || AssetReference.AlwaysAvailableDish != 0)
                 {
                     extraDishOptions += 1;
                 }
-                if (ModifiedOptionsManager.AddExtraDishOptions && level >= 15)
+                if (ModifiedOptionsManager.ExtraDishOptionsCount >= 2 && level >= 15)
                 {
                     extraDishOptions += 1;
                 }

@@ -15,12 +15,8 @@
 	</PropertyGroup>
   
 	<ItemGroup>
-		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.6.16" />
+		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.10.21" />
 		<ProjectReference Include="..\ModifiedOptionsController\ModifiedOptionsController.csproj" />
-	
-		<Reference Include="KitchenLib">
-			<HintPath>$(PlateUpGameFolder)\Mods\KitchenLib\content\KitchenLib-Workshop.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 
 	<Target Name="BundleWorkshop" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">

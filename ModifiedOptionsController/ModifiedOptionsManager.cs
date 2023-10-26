@@ -1,4 +1,4 @@
-﻿using KitchenLib;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace ModifiedOptionsController
@@ -7,11 +7,20 @@ namespace ModifiedOptionsController
     {
         public delegate T ValueProvider<T>();
 
-        public static ValueProvider<bool> AddExtraDishOptionsGetter = () => false;
-        public static bool AddExtraDishOptions => AddExtraDishOptionsGetter.Invoke();
+        #region Extra Options
+        public static ValueProvider<int> ExtraDishOptionsCountGetter = () => 0;
+        public static int ExtraDishOptionsCount => ExtraDishOptionsCountGetter.Invoke();
 
-        public static ValueProvider<bool> AddExtraLayoutOptionsGetter = () => false;
-        public static bool AddExtraLayoutOptions => AddExtraLayoutOptionsGetter.Invoke();
+        public static ValueProvider<int> ExtraLayoutOptionsCountGetter = () => 0;
+        public static int ExtraLayoutOptionsCount => ExtraLayoutOptionsCountGetter.Invoke();
+        #endregion
+
+        #region Card Priority Changer
+        public enum WeightBehavior
+        {
+            RANDOM,
+            STRICT
+        }
 
         public static ValueProvider<float> ModdedDishPercentageGetter = () => 0.0f;
         public static float ModdedDishPercentage => ModdedDishPercentageGetter.Invoke();
@@ -19,22 +28,16 @@ namespace ModifiedOptionsController
         public static ValueProvider<float> ModdedCardPercentageGetter = () => 0.0f;
         public static float ModdedCardPercentage => ModdedCardPercentageGetter.Invoke();
 
+        public static ValueProvider<float> AddonCardPercentageGetter = () => 0.0f;
+        public static float AddonCardPercentage => AddonCardPercentageGetter.Invoke();
+
         public static ValueProvider<bool> FixCardSelectionGetter = () => false;
         public static bool FixCardSelection => FixCardSelectionGetter.Invoke();
-
-        public static void InitExtraOptions(BaseMod mod)
-        {
-            Init();
-        }
-
-        public static void InitPreferMods(BaseMod mod)
-        {
-            Init();
-        }
+        #endregion
 
         private static bool IsSetup = false;
         private static HarmonyLib.Harmony HarmonyInstance;
-        private static void Init()
+        public static void Init()
         {
             if (IsSetup)
             {
@@ -46,5 +49,7 @@ namespace ModifiedOptionsController
 
             IsSetup = true;
         }
+
+        internal static HashSet<int> GDOCache;
     }
 }

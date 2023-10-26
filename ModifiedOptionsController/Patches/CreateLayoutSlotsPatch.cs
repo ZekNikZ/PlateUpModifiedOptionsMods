@@ -26,7 +26,7 @@ namespace ModifiedOptionsController.Patches
         [HarmonyPrefix]
         static bool Prefix(CreateLayoutSlots __instance)
         {
-            if (!ModifiedOptionsManager.AddExtraLayoutOptions)
+            if (ModifiedOptionsManager.ExtraLayoutOptionsCount == 0)
             {
                 return true;
             }
@@ -43,7 +43,7 @@ namespace ModifiedOptionsController.Patches
                 new Vector3(-1f, 0f, -5f),
                 new Vector3(-4f, 0f, -2f)
             };
-            for (int i = 0; i < Mathf.Min(4, 2 + CreateLayoutSlotsInitializePatch.LayoutSizeUpgrades.CalculateEntityCount()) + 2; i++)
+            for (int i = 0; i < ModifiedOptionsManager.ExtraLayoutOptionsCount + Mathf.Min(4, 2 + CreateLayoutSlotsInitializePatch.LayoutSizeUpgrades.CalculateEntityCount()); i++)
             {
                 mInfo.Invoke(__instance, new object[] { office + positions[i] });
             }

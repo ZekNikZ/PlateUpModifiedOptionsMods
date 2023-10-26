@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenExtraOptionsMod", "P
 		{CAD6686A-1541-4734-9B40-68737B9D3134} = {CAD6686A-1541-4734-9B40-68737B9D3134}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenPreferModdedOptionsMod", "PlateUpPreferModdedDishesMod\KitchenPreferModdedOptionsMod.csproj", "{CAD6686A-1541-4734-9B40-68737B9D3133}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenCardPriorityChangerMod", "PlateUpCardPriorityChangerMod\KitchenCardPriorityChangerMod.csproj", "{CAD6686A-1541-4734-9B40-68737B9D3133}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CAD6686A-1541-4734-9B40-68737B9D3134} = {CAD6686A-1541-4734-9B40-68737B9D3134}
 	EndProjectSection

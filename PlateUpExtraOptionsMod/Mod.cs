@@ -1,74 +1,70 @@
-﻿using Kitchen;
-using KitchenLib;
-using KitchenLib.Event;
-using KitchenLib.Preferences;
+﻿using HarmonyLib;
 using KitchenMods;
+using ModifiedOptionsController;
+using PreferenceSystem;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-// Namespace should have "Kitchen" in the beginning
 namespace KitchenExtraOptionsMod
 {
-    public class Mod : BaseMod, IModSystem
+    public class Mod : IModInitializer
     {
-        // guid must be unique and is recommended to be in reverse domain name notation
-        // mod name that is displayed to the player and listed in the mods menu
-        // mod version must follow semver e.g. "1.2.3"
         public const string MOD_GUID = "io.zkz.plateup.extraoptions";
         public const string MOD_NAME = "Extra Options";
-        public const string MOD_VERSION = "0.5.2";
+        public const string MOD_VERSION = "1.0.0";
         public const string MOD_AUTHOR = "ZekNikZ";
-        public const string MOD_GAMEVERSION = ">=1.1.4";
-        // Game version this mod is designed for in semver
-        // e.g. ">=1.1.1" current and all future
-        // e.g. ">=1.1.1 <=1.2.3" for all from/until
 
-        private const string PREF_KEY_EXTRA_DISH_OPTIONS = "ExtraDishOptions";
-        private const string PREF_KEY_EXTRA_LAYOUT_OPTIONS = "ExtraLayoutOptions";
+        public const string PREF_EXTRA_DISH_OPTIONS = "extraDishOptionsCount";
+        public const string PREF_EXTRA_LAYOUT_OPTIONS = "extraLayoutOptionsCount";
 
-        public static PreferenceBool ExtraDishOptionsPreference;
-        public static PreferenceBool ExtraLayoutOptionsPreference;
+        public static PreferenceSystemManager PreferenceManager;
 
-        public static PreferenceManager PreferenceManager;
+        private Harmony HarmonyInstance;
+        private List<Assembly> PatchedAssemblies = new List<Assembly>();
 
-        public Mod() : base(MOD_GUID, MOD_NAME, MOD_AUTHOR, MOD_VERSION, MOD_GAMEVERSION, Assembly.GetExecutingAssembly()) { }
-
-        protected override void OnInitialise()
+        public Mod()
         {
-            // For log file output so the official plateup support staff can identify if/which a mod is being used
-            LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
+            if (HarmonyInstance == null)
+            {
+                HarmonyInstance = new Harmony(MOD_GUID);
+            }
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            if (assembly != null && !PatchedAssemblies.Contains(assembly))
+            {
+                HarmonyInstance.PatchAll(assembly);
+                PatchedAssemblies.Add(assembly);
+            }
         }
 
-        protected override void OnPostActivate(KitchenMods.Mod mod)
+        public void PostActivate(KitchenMods.Mod mod)
         {
+            LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
+
             SetupPreferences();
 
-            InitModifiedOptions.Init(this);
+            InitModifiedOptions.Init();
         }
+
+        public void PreInject() { }
+
+        public void PostInject() { }
 
         private void SetupPreferences()
         {
+            PreferenceManager = new PreferenceSystemManager(MOD_GUID, MOD_NAME);
+
             // Register preferences
-            PreferenceManager = new PreferenceManager(MOD_GUID);
-            ExtraDishOptionsPreference = PreferenceManager.RegisterPreference(new PreferenceBool(PREF_KEY_EXTRA_DISH_OPTIONS, true));
-            ExtraLayoutOptionsPreference = PreferenceManager.RegisterPreference(new PreferenceBool(PREF_KEY_EXTRA_LAYOUT_OPTIONS, true));
-            PreferenceManager.Load();
+            PreferenceManager
+                .AddOption(PREF_EXTRA_DISH_OPTIONS, 2, new int[] { 0, 1, 2 }, new string[] { "0", "1", "2" }, "Extra Dish Options", "The amount of extra dish options to add to the HQ. Default: 2")
+                .AddOption(PREF_EXTRA_LAYOUT_OPTIONS, 2, new int[] { 0, 1, 2 }, new string[] { "0", "1", "2" }, "Extra Layout Options", "The amount of extra layout options to add to the HQ. Default: 2");
 
             // Register menus
-            ModsPreferencesMenu<MainMenuAction>.RegisterMenu(MOD_NAME, typeof(PreferencesMenu<MainMenuAction>), typeof(MainMenuAction));
-            ModsPreferencesMenu<PauseMenuAction>.RegisterMenu(MOD_NAME, typeof(PreferencesMenu<PauseMenuAction>), typeof(PauseMenuAction));
-            Events.PreferenceMenu_MainMenu_CreateSubmenusEvent += (s, args) =>
-            {
-                args.Menus.Add(typeof(PreferencesMenu<MainMenuAction>), new PreferencesMenu<MainMenuAction>(args.Container, args.Module_list));
-            };
-            Events.PreferenceMenu_PauseMenu_CreateSubmenusEvent += (s, args) =>
-            {
-                args.Menus.Add(typeof(PreferencesMenu<PauseMenuAction>), new PreferencesMenu<PauseMenuAction>(args.Container, args.Module_list));
-            };
+            PreferenceManager.RegisterMenu(PreferenceSystemManager.MenuType.MainMenu);
+            PreferenceManager.RegisterMenu(PreferenceSystemManager.MenuType.PauseMenu);
         }
 
         #region Logging
-        // You can remove this, I just prefer a more standardized logging
         public static void LogInfo(string _log) { Debug.Log($"[{MOD_NAME}] " + _log); }
         public static void LogWarning(string _log) { Debug.LogWarning($"[{MOD_NAME}] " + _log); }
         public static void LogError(string _log) { Debug.LogError($"[{MOD_NAME}] " + _log); }

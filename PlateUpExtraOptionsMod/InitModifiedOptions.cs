@@ -1,5 +1,4 @@
-﻿using KitchenLib;
-using ModifiedOptionsController;
+﻿using ModifiedOptionsController;
 
 namespace KitchenExtraOptionsMod
 {
@@ -7,18 +6,18 @@ namespace KitchenExtraOptionsMod
     {
         private static bool IsSetup = false;
 
-        public static void Init(BaseMod mod)
+        public static void Init()
         {
             if (IsSetup)
             {
                 return;
             }
 
-            ModifiedOptionsManager.AddExtraDishOptionsGetter = Mod.ExtraDishOptionsPreference.Get;
-            ModifiedOptionsManager.AddExtraLayoutOptionsGetter = Mod.ExtraLayoutOptionsPreference.Get;
-            ModifiedOptionsManager.InitExtraOptions(mod);
+            ModifiedOptionsManager.ExtraDishOptionsCountGetter = () => Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_DISH_OPTIONS);
+            ModifiedOptionsManager.ExtraLayoutOptionsCountGetter = () => Mod.PreferenceManager.Get<int>(Mod.PREF_EXTRA_LAYOUT_OPTIONS);
+            ModifiedOptionsManager.Init();
 
-            Mod.LogInfo($"Initial settings: AddExtraDishOptions={ModifiedOptionsManager.AddExtraDishOptions}; AddExtraLayoutOptions={ModifiedOptionsManager.AddExtraLayoutOptions}");
+            Mod.LogInfo($"Initial settings: AddExtraDishOptions={ModifiedOptionsManager.ExtraDishOptionsCount}; AddExtraLayoutOptions={ModifiedOptionsManager.ExtraLayoutOptionsCount}");
 
             IsSetup = true;
         }
